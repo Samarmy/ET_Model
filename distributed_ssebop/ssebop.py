@@ -14,9 +14,9 @@ class Ssebop():
     """Xarray based SSEBop Image"""
 
     def __init__(
-            self, band3_data,
-            band4_data,
-            band8_data,
+            self, band4_data,
+            band5_data,
+            band10_data,
             date,
             et_reference_factor=None,
             et_reference_resample="linear",
@@ -24,9 +24,9 @@ class Ssebop():
             elev_resample="linear",
             dt_resample="linear",
     ):
-        self.band3_data = band3_data
         self.band4_data = band4_data
-        self.band8_data = band8_data
+        self.band5_data = band5_data
+        self.band10_data = band10_data
         self.date = date
 
         date_split = date.split("-")
@@ -137,21 +137,21 @@ class Ssebop():
         return self.lst.divide(self.interpolated_tmax)
 
     def band_to_landsat(self):
-        band3 = self.band3_data.multiply(0.0001)
-        band4 = self.band4_data.multiply(0.0001)
-        band8 = self.band8_data.multiply(0.1)
+        band4 = self.band3_data.multiply(0.0001)
+        band5 = self.band4_data.multiply(0.0001)
+        band10 = self.band8_data.multiply(0.1)
 
         land_sat_data = xr.Dataset(
             data_vars=dict(
-                red=(["y", "x"], band3),
-                nir=(["y", "x"], band4),
-                tir=(["y", "x"], band8),
+                red=(["y", "x"], band4),
+                nir=(["y", "x"], band5),
+                tir=(["y", "x"], band10),
                 k1_constant=(774.89),
                 k2_constant=(1321.08)
             ),
             coords=dict(
-                lon=(["y", "x"], band3.lon.values),
-                lat=(["y", "x"], band3.lat.values),
+                lon=(["y", "x"], band4.lon.values),
+                lat=(["y", "x"], band4.lat.values),
             ),
         )
 
